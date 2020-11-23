@@ -1,5 +1,4 @@
-﻿using MVC.DTO;
-using ReadLater.Entities;
+﻿using ReadLater.Entities;
 using ReadLater.Services;
 using System.Collections.Generic;
 using System.Net;
@@ -37,13 +36,19 @@ namespace MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (!string.IsNullOrEmpty(bookmark.Category?.Name))
+                Category category = _categoryService.GetCategory(bookmark.Category.Name);
+
+                if (!string.IsNullOrEmpty(bookmark.Category.Name) && bookmark.Category.Name != category?.Name)
                 {
-                    Category category = _categoryService.CreateCategory(new Category { Name = bookmark.Category.Name });
+                    Category newCategory = _categoryService.CreateCategory(new Category { Name = bookmark.Category.Name });
+                    bookmark.CategoryId = newCategory.ID;
+                }
+                else if (category != null)
+                {
                     bookmark.CategoryId = category.ID;
-                    bookmark.Category = category;
                 }
 
+                bookmark.Category = null;
                 _bookmarkService.CreateBookmark(bookmark);
                 return RedirectToAction("Index");
             }
@@ -98,7 +103,7 @@ namespace MVC.Controllers
                 {
                     Category newCategory = _categoryService.CreateCategory(new Category { Name = bookmark.Category.Name });
                     bookmark.CategoryId = newCategory.ID;
-                    bookmark.Category = newCategory;
+                    bookmark.Category = null;
                 }
 
                 _bookmarkService.UpdateBookmark(bookmark);
