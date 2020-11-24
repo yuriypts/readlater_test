@@ -36,19 +36,7 @@ namespace MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                Category category = _categoryService.GetCategory(bookmark.Category.Name);
-
-                if (!string.IsNullOrEmpty(bookmark.Category.Name) && bookmark.Category.Name != category?.Name)
-                {
-                    Category newCategory = _categoryService.CreateCategory(new Category { Name = bookmark.Category.Name });
-                    bookmark.CategoryId = newCategory.ID;
-                }
-                else if (category != null)
-                {
-                    bookmark.CategoryId = category.ID;
-                }
-
-                bookmark.Category = null;
+                CreateEditCategory(bookmark);
                 _bookmarkService.CreateBookmark(bookmark);
                 return RedirectToAction("Index");
             }
@@ -97,15 +85,7 @@ namespace MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                Category category = _categoryService.GetCategory(bookmark.Category.Name);
-
-                if (!string.IsNullOrEmpty(bookmark.Category.Name) && bookmark.Category.Name != category?.Name)
-                {
-                    Category newCategory = _categoryService.CreateCategory(new Category { Name = bookmark.Category.Name });
-                    bookmark.CategoryId = newCategory.ID;
-                    bookmark.Category = null;
-                }
-
+                CreateEditCategory(bookmark);
                 _bookmarkService.UpdateBookmark(bookmark);
                 return RedirectToAction("Index");
             }
@@ -137,5 +117,32 @@ namespace MVC.Controllers
             _bookmarkService.DeleteBookmark(bookmark);
             return RedirectToAction("Index");
         }
+
+        #region Helpers
+        // TODO - would be great to create for this a middlelayer (service)
+
+        public void CreateEditCategory(Bookmark bookmark) 
+        {
+            Category category = _categoryService.GetCategory(bookmark.Category.Name);
+
+            if (string.IsNullOrEmpty(bookmark.Category.Name))
+            {
+                bookmark.Category = null;
+                bookmark.CategoryId = null;
+            }
+            else if (bookmark.Category.Name != category?.Name)
+            {
+                Category newCategory = _categoryService.CreateCategory(new Category { Name = bookmark.Category.Name });
+                bookmark.CategoryId = newCategory.ID;
+                bookmark.Category = null;
+            }
+            else
+            {
+                bookmark.Category = category;
+                bookmark.CategoryId = category.ID;
+            }
+        }
+
+        #endregion
     }
 }
