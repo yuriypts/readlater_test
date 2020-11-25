@@ -7,6 +7,7 @@ using Owin;
 using MVC.Models;
 using Microsoft.Owin.Security.OAuth;
 using MVC.Providers;
+using Microsoft.Owin.Security.Google;
 
 namespace MVC
 {
@@ -68,18 +69,18 @@ namespace MVC
             //    clientSecret: "");
 
             //app.UseTwitterAuthentication(
-            //   consumerKey: "",
-            //   consumerSecret: "");
+            //   consumerKey: "Nyo8gRDoX5CxYPsl5qi3kCzHY", //please don't use this credentials for yours projects/stuff.
+            //   consumerSecret: "SoSvKUcyQkKveWEKRCQukcNB4viCoGkx2BZ60sWbZgylpyUiok"); //please don't use this credentials for yours projects/stuff.
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "393491188736661", //please don't use this credentials for yours projects/stuff.
+               appSecret: "d1ab935a4d61466f52c5894f6b024221"); // please don't use this credentials for yours projects/stuff.
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "941114320625-rfps1fnvhvjo0dl7rh6agk28mrbn40bl.apps.googleusercontent.com", // please don't use this credentials for yours projects/stuff.
+                ClientSecret = "W_GMhoWXcGrMbbJxR49hg0HN" // please don't use this credentials for yours projects/stuff.
+            });
         }
     }
 }
